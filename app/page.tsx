@@ -1,101 +1,107 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { Combobox } from "@headlessui/react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedService, setSelectedService] = useState("");
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const timeOptions = [
+    "9:00 am",
+    "9:30 am",
+    "10:00 am",
+    "10:30 am",
+    "11:00 am",
+    "11:30 am",
+    "12:00 pm",
+    "12:30 pm",
+    "1:00 pm",
+    "1:30 pm",
+    "2:00 pm",
+    "2:30 pm",
+    "3:00 pm",
+    "3:30 pm",
+    "4:00 pm",
+    "4:30 pm",
+  ];
+
+  const services = [
+    "Pet grooming",
+    "Pet boarding",
+    "Pet training",
+    "Pet treatment",
+  ];
+
+  return (
+    <div className="h-screen w-screen bg-gradient-to-r from-pink-200 to-yellow-200 flex items-center justify-center">
+      <div className="flex items-center rounded-full shadow-lg bg-white p-4 gap-4">
+        {/* Services Dropdown */}
+        <Combobox as="div" className="relative w-1/4" value={selectedService} onChange={setSelectedService}>
+          <Combobox.Button className="flex items-center gap-2">
+            🔍 <span>All treatments and venues</span>
+          </Combobox.Button>
+          <Combobox.Options className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg p-2">
+            <h3 className="font-semibold">Services</h3>
+            {services.map((service) => (
+              <Combobox.Option
+                key={service}
+                value={service}
+                className="cursor-pointer hover:bg-gray-100 rounded p-2"
+              >
+                {service}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        </Combobox>
+
+        {/* Location Input */}
+        <div className="w-1/4 flex items-center gap-2">
+          📍
+          <input
+            type="text"
+            placeholder="Current location"
+            className="border-none focus:outline-none focus:ring-0"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Date Picker */}
+        <div className="w-1/4 relative">
+          <button className="flex items-center gap-2" onClick={() => setIsDatePickerVisible(!isDatePickerVisible)}>
+            📍 Choose date
+          </button>
+          {isDatePickerVisible && (
+            <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg">
+              <Calendar onChange={setSelectedDate} value={selectedDate} className="rounded-lg" />
+            </div>
+          )}
+        </div>
+
+        {/* Time Picker */}
+        <div className="w-1/4 relative">
+          <button className="flex items-center gap-2" onClick={() => setIsTimePickerVisible(!isTimePickerVisible)}>
+            ⏰ Choose time
+          </button>
+          {isTimePickerVisible && (
+            <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg p-2">
+              {timeOptions.map((time) => (
+                <div
+                  key={time}
+                  className="cursor-pointer hover:bg-red-100 text-red-500 rounded-full px-4 py-1 my-1"
+                >
+                  {time}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Search Button */}
+        <button className="bg-black text-white rounded-full px-6 py-2">Search</button>
+      </div>
     </div>
   );
 }
