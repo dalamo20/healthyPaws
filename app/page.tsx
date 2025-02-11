@@ -1,40 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Combobox } from "@headlessui/react";
 
 export default function Home() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedService, setSelectedService] = useState("");
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const timeOptions = [
-    "9:00 am",
-    "9:30 am",
-    "10:00 am",
-    "10:30 am",
-    "11:00 am",
-    "11:30 am",
-    "12:00 pm",
-    "12:30 pm",
-    "1:00 pm",
-    "1:30 pm",
-    "2:00 pm",
-    "2:30 pm",
-    "3:00 pm",
-    "3:30 pm",
-    "4:00 pm",
-    "4:30 pm",
+    "9:00 am", "9:30 am", "10:00 am", "10:30 am",
+    "11:00 am", "11:30 am", "12:00 pm", "12:30 pm",
+    "1:00 pm", "1:30 pm", "2:00 pm", "2:30 pm",
+    "3:00 pm", "3:30 pm", "4:00 pm", "4:30 pm"
   ];
 
-  const services = [
-    "Pet grooming",
-    "Pet boarding",
-    "Pet training",
-    "Pet treatment",
-  ];
+  const services = ["Pet grooming", "Pet boarding", "Pet training", "Pet treatment"];
+
+   useEffect(() => {
+    setSelectedDate(new Date()); 
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="h-screen w-screen bg-gradient-to-r from-pink-200 to-yellow-200 flex items-center justify-center">
@@ -58,7 +49,7 @@ export default function Home() {
           </Combobox.Options>
         </Combobox>
 
-        {/* Location Input */}
+        {/* Location */}
         <div className="w-1/4 flex items-center gap-2">
           📍
           <input
@@ -68,7 +59,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Date Picker */}
+        {/* Date */}
         <div className="w-1/4 relative">
           <button className="flex items-center gap-2" onClick={() => setIsDatePickerVisible(!isDatePickerVisible)}>
             📍 Choose date
@@ -80,7 +71,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* Time Picker */}
+        {/* Time */}
         <div className="w-1/4 relative">
           <button className="flex items-center gap-2" onClick={() => setIsTimePickerVisible(!isTimePickerVisible)}>
             ⏰ Choose time
@@ -98,8 +89,6 @@ export default function Home() {
             </div>
           )}
         </div>
-
-        {/* Search Button */}
         <button className="bg-black text-white rounded-full px-6 py-2">Search</button>
       </div>
     </div>
