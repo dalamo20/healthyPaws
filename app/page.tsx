@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Combobox } from "@headlessui/react";
+import { Combobox, ComboboxButton, ComboboxOptions, ComboboxOption } from "@headlessui/react";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -20,8 +21,8 @@ export default function Home() {
 
   const services = ["Pet grooming", "Pet boarding", "Pet training", "Pet treatment"];
 
-   useEffect(() => {
-    setSelectedDate(new Date()); 
+  useEffect(() => {
+    setSelectedDate(new Date());
     setIsMounted(true);
   }, []);
 
@@ -29,34 +30,29 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen bg-gradient-to-r from-pink-200 to-yellow-200 flex items-center justify-center">
+      <Navbar />
       <div className="flex items-center rounded-full shadow-lg bg-white p-4 gap-4">
         {/* Services Dropdown */}
-        <Combobox as="div" className="relative w-1/4" value={selectedService} onChange={setSelectedService}>
-          <Combobox.Button className="flex items-center gap-2">
-            🔍 <span>All treatments and venues</span>
-          </Combobox.Button>
-          <Combobox.Options className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg p-2">
-            <h3 className="font-semibold">Services</h3>
-            {services.map((service) => (
-              <Combobox.Option
-                key={service}
-                value={service}
-                className="cursor-pointer hover:bg-gray-100 rounded p-2"
-              >
-                {service}
-              </Combobox.Option>
-            ))}
-          </Combobox.Options>
+        <Combobox value={selectedService} onChange={setSelectedService}>
+          <div className="relative w-1/4">
+            <ComboboxButton className="flex items-center gap-2">
+              🔍 <span>All treatments and venues</span>
+            </ComboboxButton>
+            <ComboboxOptions className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg p-2">
+              <h3 className="font-semibold">Services</h3>
+              {services.map((service) => (
+                <ComboboxOption key={service} value={service} className="cursor-pointer hover:bg-gray-100 rounded p-2">
+                  {service}
+                </ComboboxOption>
+              ))}
+            </ComboboxOptions>
+          </div>
         </Combobox>
 
         {/* Location */}
         <div className="w-1/4 flex items-center gap-2">
           📍
-          <input
-            type="text"
-            placeholder="Current location"
-            className="border-none focus:outline-none focus:ring-0"
-          />
+          <input type="text" placeholder="Current location" className="border-none focus:outline-none focus:ring-0" />
         </div>
 
         {/* Date */}
@@ -79,10 +75,7 @@ export default function Home() {
           {isTimePickerVisible && (
             <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg p-2">
               {timeOptions.map((time) => (
-                <div
-                  key={time}
-                  className="cursor-pointer hover:bg-red-100 text-red-500 rounded-full px-4 py-1 my-1"
-                >
+                <div key={time} className="cursor-pointer hover:bg-red-100 text-red-500 rounded-full px-4 py-1 my-1">
                   {time}
                 </div>
               ))}
