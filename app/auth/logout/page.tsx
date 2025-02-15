@@ -9,7 +9,7 @@ export default function Logout() {
   useEffect(() => {
     const handleLogout = async () => {
       await logout();
-      router.push("/auth/login"); // Redirect to login page after logout
+      router.push("/auth/login");
     };
 
     handleLogout();
@@ -17,7 +17,7 @@ export default function Logout() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-r from-pink-200 to-yellow-200">
-      <h1 className="text-2xl font-semibold mb-4">Logging out...</h1>
+      <h1 className="text-2xl font-semibold mb-4">Logging out</h1>
     </div>
   );
 }
