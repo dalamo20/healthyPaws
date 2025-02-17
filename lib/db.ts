@@ -1,5 +1,5 @@
 import { db } from "./firebase";
-import { collection, doc, setDoc, getDoc, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 
 //Add User Profile
 export const addUser = async (userId: string, email: string) => {
@@ -15,4 +15,20 @@ export const getUser = async (userId: string) => {
 //Add Booking
 export const addBooking = async (userId: string, bookingData: any) => {
   await addDoc(collection(db, "users", userId, "bookings"), bookingData);
+};
+
+// Get All Bookings for Logged-in User
+export const getBookings = async (userId: string) => {
+  const snapshot = await getDocs(collection(db, "users", userId, "bookings"));
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
+
+// Edit Booking (Update Date or Time)
+export const updateBooking = async (userId: string, bookingId: string, updatedData: any) => {
+  await updateDoc(doc(db, "users", userId, "bookings", bookingId), updatedData);
+};
+
+// Delete Booking
+export const deleteBooking = async (userId: string, bookingId: string) => {
+  await deleteDoc(doc(db, "users", userId, "bookings", bookingId));
 };
