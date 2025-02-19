@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env
+.env.local
+.env.*.local
 
 # vercel
 .vercel
@@ -39,3 +42,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore Firebase Cache (if exists)
+.firebase/
+
+# Ignore ALL JSON files by default (Except necessary ones)
+*.json
+!firebase.json
+!firestore.rules
+!firestore.indexes.json
+!storage.rules
+
+# Ignore ALL Service Account Keys (No matter where they are)
+**/serviceAccountKey.json
+**/google-cloud-vision-api/*.json
+**/config/google-cloud-vision-api/*.json
+**/credentials/*.json
+
+# Ignore Firebase Emulator if used
+/.firebase-*
+/firestore_export/

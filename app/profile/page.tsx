@@ -14,6 +14,7 @@ export default function Profile() {
   const [petImage, setPetImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -42,6 +43,30 @@ export default function Profile() {
     }
   };
 
+  const analyzePetImage = async (url: string) => {
+    setAnalyzing(true);
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: JSON.stringify({ imageUrl: url }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const { labels } = await response.json();
+      console.log("Detected Labels:", labels);
+      // Autofills if pet type is detected
+      // Add more labels for more pet types
+      if (labels.includes("dog")) setPetType("Dog");
+      else if (labels.includes("cat")) setPetType("Cat");
+      else if (labels.includes("rabbit")) setPetType("Rabbit");
+      else setPetType("Unknown");
+
+    } catch (error) {
+      console.error("Image analysis failed:", error);
+    }
+    setAnalyzing(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -51,6 +76,8 @@ export default function Profile() {
       const imageRef = ref(storage, `pets/${user.uid}/${petImage.name}`);
       await uploadBytes(imageRef, petImage);
       downloadURL = await getDownloadURL(imageRef);
+      // Analyzes image after upload 
+      await analyzePetImage(downloadURL);
     }
 
     const petProfile = {
@@ -70,10 +97,11 @@ export default function Profile() {
       <h1 className="text-2xl font-semibold mb-4">Pet Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input type="text" placeholder="Pet Name" value={petName} onChange={(e) => setPetName(e.target.value)} required className="border p-2" />
-        <input type="text" placeholder="Pet Type (Dog, Cat, etc.)" value={petType} onChange={(e) => setPetType(e.target.value)} required className="border p-2" />
+        <input type="text" placeholder="Pet Type" value={petType} onChange={(e) => setPetType(e.target.value)} required className="border p-2" />
         <input type="number" placeholder="Pet Age" value={petAge} onChange={(e) => setPetAge(e.target.value)} required className="border p-2" />
         <input type="file" onChange={handleFileChange} className="border p-2" />
         {imageUrl && <img src={imageUrl} alt="Pet" className="w-32 h-32 object-cover rounded-lg" />}
+        {analyzing && <p className="text-gray-600">Analyzing image...</p>}
         <button type="submit" className="bg-black text-white p-2">Save Profile</button>
       </form>
     </div>
