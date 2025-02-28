@@ -48,9 +48,10 @@ export default function Register() {
         <input type="email" placeholder="Email" className="border p-2" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" className="border p-2" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <input type="password" placeholder="Confirm Password" className="border p-2" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-        <button onClick={(e) => {e.preventDefault(); router.push("/auth/login"); }} type="button" className="bg-black text-white p-2">
+        <button type="submit" className="bg-black text-white p-2">
           Sign Up
         </button>
+
       </form>
 
       {error && <p className="text-red-500 mt-2">{error}</p>}

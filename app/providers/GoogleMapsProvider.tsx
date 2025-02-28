@@ -3,9 +3,9 @@ import { LoadScript } from "@react-google-maps/api";
 
 const libraries: ("places")[] = ["places"];
 
-export default function GoogleMapsProvider({ children }: { children: React.ReactNode }) {
+export default function GoogleMapsProvider({ children, apiKey }: { children: React.ReactNode; apiKey: string }) {
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY || ""} libraries={libraries}>
+    <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
       {children}
     </LoadScript>
   );

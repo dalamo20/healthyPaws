@@ -23,12 +23,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY || "";
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GoogleMapsProvider>{children}</GoogleMapsProvider>
+        <GoogleMapsProvider apiKey={googleMapsApiKey}>{children}</GoogleMapsProvider>
       </body>
     </html>
   );
