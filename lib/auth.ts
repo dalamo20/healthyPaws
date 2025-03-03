@@ -4,11 +4,11 @@ import { addUser } from "./db";
 
 export const signUp = async (email: string, password: string) => {
   try {
-    console.log("Firebase Auth Instance:", auth);
+    // console.log("Firebase Auth Instance:", auth);
 
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    console.log("User created in Firebase Auth:", user.uid);
+    // console.log("User created in Firebase Auth:", user.uid);
 
     try {
       await addUser(user.uid, email);
