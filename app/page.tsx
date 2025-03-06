@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import { LoadScript, Autocomplete } from "@react-google-maps/api";
 import { auth } from "@/lib/firebase";
 import { addBooking } from "@/lib/db";
+import './globals.css';
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -22,10 +23,10 @@ export default function Home() {
   const autocompleteRef = useRef(null);
 
   const timeOptions = [
-    "9:00 am", "9:30 am", "10:00 am", "10:30 am",
-    "11:00 am", "11:30 am", "12:00 pm", "12:30 pm",
-    "1:00 pm", "1:30 pm", "2:00 pm", "2:30 pm",
-    "3:00 pm", "3:30 pm", "4:00 pm", "4:30 pm"
+    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
+    "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
+    "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM",
+    "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"
   ];
 
   const services = ["Pet grooming", "Pet boarding", "Pet training", "Pet treatment"];
@@ -110,15 +111,22 @@ export default function Home() {
   if (!isMounted) return null;
 
   return (
-      <div className="h-screen w-screen bg-gradient-to-r from-pink-200 to-yellow-200 flex flex-col items-center justify-start relative">
+    <div className="relative">
+    <div className="background-wrapper">
+      <div className="blob blob-1"></div>
+      <div className="blob blob-2"></div>
+    </div>
+      <div className="h-screen w-screen flex flex-col items-center justify-start relative">
         <Navbar />
-        <div className="mt-20 flex items-center rounded-full shadow-lg bg-white p-4 gap-4 z-10">
+        <h1 className="mt-32 text-4xl font-semibold">Book Local Pet Services</h1>
+        <p className="mt-6">From grooming to pet training services</p>
+        <div className="mt-20 flex items-center rounded-full shadow-lg bg-white p-4 gap-4">
           <Combobox value={selectedService} onChange={setSelectedService}>
             <div className="relative w-1/4">
-              <ComboboxButton className="flex items-center gap-2">
-                🔍 <span>{selectedService || "All treatments and venues"}</span>
+              <ComboboxButton className="flex items-center gap-2 hover:bg-gray-100">
+                🔍 <span>{selectedService || "All services"}</span>
               </ComboboxButton>
-              <ComboboxOptions className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg p-2 max-h-40 overflow-y-auto z-20">
+              <ComboboxOptions className="absolute top-full mt-8 w-full bg-white rounded-lg shadow-lg p-2 max-h-auto overflow-y-auto z-20">
                 <h3 className="font-semibold">Services</h3>
                 {services.map((service) => (
                   <ComboboxOption key={service} value={service} className="cursor-pointer hover:bg-gray-100 rounded p-2">
@@ -130,18 +138,17 @@ export default function Home() {
           </Combobox>
 
           <div className="w-1/4 flex items-center gap-2">
-            📍
             <Autocomplete onLoad={(auto) => (autocompleteRef.current = auto)} onPlaceChanged={handlePlaceSelect}>
-              <input type="text" placeholder="Enter city or state" className="border-none focus:outline-none focus:ring-0 w-full" value={location} onChange={(e) => setLocation(e.target.value)} />
+              <input type="text" placeholder="Enter city or state" className="border-none focus:outline-none focus:ring-0 w-full hover:bg-gray-100" value={location} onChange={(e) => setLocation(e.target.value)} />
             </Autocomplete>
           </div>
 
           <div className="w-1/4 relative">
-            <button className="flex items-center gap-2" onClick={() => setIsDatePickerVisible(!isDatePickerVisible)}>
+            <button className="flex items-center gap-2 hover:bg-gray-100" onClick={() => setIsDatePickerVisible(!isDatePickerVisible)}>
               📅 {selectedDate ? selectedDate.toDateString() : "Choose date"}
             </button>
             {isDatePickerVisible && (
-              <div className="absolute top-full mt-2 bg-white rounded-lg shadow-lg z-20">
+              <div className="absolute right-[-75px] top-full mt-8 bg-white rounded-lg shadow-lg z-20">
                 <Calendar
                   onChange={(date) => {
                     setSelectedDate(date);
@@ -155,21 +162,37 @@ export default function Home() {
           </div>
 
           <div className="w-1/4 relative">
-            <button className="flex items-center gap-2" onClick={() => setIsTimePickerVisible(!isTimePickerVisible)}>
-              ⏰ {selectedTime ? selectedTime : "Choose time"}
+            <button 
+              onClick={() => setIsTimePickerVisible(!isTimePickerVisible)} 
+              className="flex items-center w-full py-2 px-5 text-sm font-medium bg-white rounded-lg hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            >
+              ⏰ {selectedTime || "Pick a time"}
             </button>
+            
             {isTimePickerVisible && (
-              <div className="absolute top-full mt-2 bg-white/80 backdrop-blur-md rounded-lg shadow-lg p-2 z-20">
+              <ul className="absolute top-full mt-2 bg-white rounded-lg shadow-lg p-2 w-full grid grid-cols-2 gap-2">
                 {timeOptions.map((time) => (
-                  <div key={time} className="cursor-pointer hover:bg-red-100 text-red-500 rounded-full px-4 py-1 my-1" onClick={() => { setSelectedTime(time); setIsTimePickerVisible(false); }}>
-                    {time}
-                  </div>
+                  <li key={time}>
+                    <input 
+                      type="radio" 
+                      id={time} 
+                      name="timetable" 
+                      className="hidden peer" 
+                      onChange={() => {
+                        setSelectedTime(time); // Set time
+                        setIsTimePickerVisible(false); // Hide picker
+                      }} 
+                    />
+                    <label htmlFor={time} className="block text-center cursor-pointer px-18 py-2 bg-white border rounded-lg hover:bg-blue-500 hover:text-white peer-checked:bg-blue-600 peer-checked:text-white">
+                      {time}
+                    </label>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
 
-          <button onClick={fetchNearbyPlaces} className="bg-black text-white rounded-full px-6 py-2 z-10">Find Pet Services</button>
+          <button onClick={fetchNearbyPlaces} className="bg-black text-white rounded-full px-6 py-2 z-5">Search</button>
         </div>
 
         <div className="mt-4 p-4 bg-white rounded-lg shadow-lg w-3/4 max-h-[300px] overflow-y-auto">
@@ -192,5 +215,6 @@ export default function Home() {
           </ul>
         </div>
       </div>
+    </div>
   );
 }

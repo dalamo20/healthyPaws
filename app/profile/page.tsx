@@ -108,9 +108,9 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-pink-200 to-yellow-200 p-4"> 
       <Navbar />
-      <h1 className="text-2xl font-semibold mb-4">Pet Profile</h1>
-
-      {/* Circular Profile Image Upload */}
+      <h1 className="text-2xl font-semibold mb-4">Pet Profile</h1> 
+      
+      {/* Image Upload */}
       <div 
         className="relative w-40 h-40 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer overflow-hidden border-4 border-white shadow-lg"
         onClick={() => fileInputRef.current?.click()}
@@ -125,7 +125,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Hidden File Input */}
+      {/* Hide File Upload */}
       <input
         type="file"
         accept="image/*"
@@ -143,14 +143,21 @@ export default function Profile() {
 
         <button type="submit" className="bg-black text-white p-2 rounded-md">Save Profile</button>
       </form>
-
-      {/* Pet Traits */}
+      {/* Pet Traits Div*/}
       {petTraits.length > 0 && (
         <div className="mt-6 bg-white p-4 rounded-lg shadow-lg w-80">
           <h3 className="text-lg font-semibold">Detected Traits:</h3>
-          <ul className="list-disc pl-4 mt-2">
+          <ul className="relative bg-white p-4 rounded-md shadow-lg w-full">
             {petTraits.map((trait, index) => (
-              <li key={index} className="text-gray-700">{trait}</li>
+              <li
+                key={index}
+                className="relative text-gray-800 text-lg pl-6 list-none border-b border-blue-300 last:border-none py-2 before:absolute before:left-2 before:top-1/2 before:-translate-y-1/2"
+                style={{
+                  paddingLeft: "1rem",
+                  fontFamily: "cursive",
+                }}>
+                {trait}
+              </li>            
             ))}
           </ul>
         </div>

@@ -13,23 +13,41 @@ Healthy Paws allows users to:
 - **Service Locator**: Search and find local pet services using location-based functionality (Google Maps API optional).  
 - **Bookings Management**: Full CRUD capabilities for creating, updating, and managing bookings.  
 - **Pet Profiles**: Add details about your pet to make all your appointments easier.  
-- **AI-Powered Recommendations**: Get AI-driven pet care.  
+- **AI-Powered Profile Personalization**: Boost your pet's profile with Google's Vision API.  
 - **Search Functionality**: Quickly find relevant services at the click of a button.  
 
 ## Technologies Used  
-- **Frontend**: Next.js (with TypeScript)  
-- **Backend**: Node.js  
-- **Database**: Firebase (for hosting and database storage)  
-- **AI Integration**: Google Gemini for AI-driven functionality  
+- **Framework/Frontend**: Next.js (with TypeScript), React.js, Tailwind CSS
+- **Database**: Firebase (Authentication, Firestore, Storage)  
+- **AI Integration**: Google Cloud Vision API  
 - **Optional Features**: Google Maps API for location-based searches  
 
 ## Setup Instructions  
 To set up Healthy Paws locally, follow these steps:  
 
 ### Prerequisites  
-- Node.js (v16 or higher)  
-- Firebase Project (Set up a Firebase project and enable Firestore Database)  
-- Google Cloud Project (Google Maps API for location-based services)  
+Ensure you have the following installed before proceeding:  
+- **Node.js** (v16 or higher)  
+- **Firebase** (Set up a Firebase project and enable Firestore & Storage)  
+- **Google Cloud Project** (Enable Vision API & Maps API if used)  
 
 ### Installation  
-1. Clone the repository: git clone https://github.com/....
+- git clone https://github.com/dalamo20/healthyPaws.git
+- cd healthyPaws
+- npm install
+
+- ** .env file
+NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=firebase_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id
+NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=google_maps_api_key
+NEXT_PUBLIC_GOOGLE_VISION_API_KEY=google_vision_api_key
+NEXT_PUBLIC_GEMINI_API_KEY=google_gemini_ai_key
+
+- npm run dev
+
+
+

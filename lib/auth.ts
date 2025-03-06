@@ -4,11 +4,8 @@ import { addUser } from "./db";
 
 export const signUp = async (email: string, password: string) => {
   try {
-    // console.log("Firebase Auth Instance:", auth);
-
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    // console.log("User created in Firebase Auth:", user.uid);
 
     try {
       await addUser(user.uid, email);
@@ -19,8 +16,6 @@ export const signUp = async (email: string, password: string) => {
     return user;
   } catch (error: any) {
     console.error("Signup error:", error.message);
-    // console.error("Signup error object:", error);
-
     let errorMessage = "An error occurred. Please try again.";
     if (error.code === "auth/email-already-in-use") {
       errorMessage = "This email is already in use. Please use a different email.";
@@ -29,7 +24,6 @@ export const signUp = async (email: string, password: string) => {
     } else if (error.code === "auth/invalid-email") {
       errorMessage = "Invalid email format. Please enter a valid email.";
     }
-
     throw new Error(errorMessage);
   }
 };

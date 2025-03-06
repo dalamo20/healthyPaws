@@ -23,7 +23,6 @@ export default function Navbar() {
     router.push("/auth/login");
   };
 
-  //scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolling(window.scrollY > 50);
@@ -33,7 +32,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full p-4 transition-all ${scrolling ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
+    <nav className={`fixed top-0 left-0 w-full p-4 transition-all z-100 ${scrolling ? "bg-white/80 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-lg font-semibold">Healthy Paws</Link>
         <div className="flex items-center gap-4">
