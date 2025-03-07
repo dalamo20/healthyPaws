@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/lib/auth";
+import Link from "next/link";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -35,10 +36,15 @@ export default function Register() {
         router.push("/auth/login");
       }, 1000); 
 
-    } catch (error: any) {
-      console.error("Signup error:", error.message);
-      setError(error.message);
-    }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Signup error:", error.message);
+        setError(error.message);
+      } else {
+        console.error("An unknown error occurred during signup.");
+        setError("An unknown error occurred.");
+      }
+    }    
   };
 
   return (
@@ -58,7 +64,7 @@ export default function Register() {
       {success && <p className="text-green-500 mt-2">{success}</p>}
 
       <p className="mt-2">
-        Already have an account? <a href="/auth/login" className="text-blue-500">Sign in</a>
+        Already have an account? <Link href="/auth/login" className="text-blue-500">Sign in</Link>
       </p>
     </div>
   );

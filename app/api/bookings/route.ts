@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     const bookings = await getBookings(userId);
     return NextResponse.json(bookings);
   } catch (error) {
+    console.error("Error fetching bookings:", error);
     return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });
   }
 }
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
     await addBooking(userId, bookingData);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error adding bookings:", error);
     return NextResponse.json({ error: "Failed to add booking" }, { status: 500 });
   }
 }
@@ -37,6 +39,7 @@ export async function PUT(req: NextRequest) {
     await updateBooking(userId, bookingId, updatedData);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error updating bookings:", error);
     return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
   }
 }
@@ -50,6 +53,7 @@ export async function DELETE(req: NextRequest) {
     await deleteBooking(userId, bookingId);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error deleting bookings:", error);
     return NextResponse.json({ error: "Failed to delete booking" }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { User } from 'firebase/auth';
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -11,10 +12,9 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null ) => {
       setUser(currentUser);
     });
-
     return () => unsubscribe();
   }, []);
 

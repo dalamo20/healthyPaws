@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(data);
   } catch (error) {
+    console.error("Error fetching places:", error);
     return NextResponse.json({ error: "Failed to fetch places" }, { status: 500 });
   }
 }

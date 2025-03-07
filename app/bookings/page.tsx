@@ -6,8 +6,16 @@ import { auth } from "@/lib/firebase";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
+interface Booking {
+  id: string;
+  serviceName: string;
+  placeName: string;
+  date: string;
+  time: string;
+}
+
 export default function Bookings() {
-  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [isMounted, setIsMounted] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newDate, setNewDate] = useState<Date | null>(null);
@@ -22,11 +30,15 @@ export default function Bookings() {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const user = auth.currentUser;
+      try {
+        const user = auth.currentUser;
       if (!user) return;
       const data = await getBookings(user.uid);
       setBookings(data);
-    };
+      } catch (error) {
+        console.error("Error fetching bookings", error);
+      }
+    }
 
     fetchBookings();
     setIsMounted(true);

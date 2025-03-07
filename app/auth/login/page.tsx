@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { login } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,9 +22,12 @@ export default function Login() {
     try {
       await login(email, password);
       router.push("/"); 
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+          console.error("Login error:", error.message);
+      }
       setError("Invalid email or password");
-    }
+    }  
   };
 
   return (
@@ -36,7 +40,7 @@ export default function Login() {
       </form>
       {error && <p className="text-red-500 mt-2">{error}</p>}
       <p className="mt-2">
-        Don’t have an account? <a href="/auth/register" className="text-blue-500">Sign up</a>
+        Don’t have an account? <Link href="/auth/register" className="text-blue-500">Sign up</Link>
       </p>
     </div>
   );
