@@ -32,3 +32,19 @@ export const updateBooking = async (userId: string, bookingId: string, updatedDa
 export const deleteBooking = async (userId: string, bookingId: string) => {
   await deleteDoc(doc(db, "users", userId, "bookings", bookingId));
 };
+
+//Get Pet Profile
+export const getPetProfile = async (userId: string) => {
+  const petDoc = await getDoc(doc(db, "users", userId, "petProfile", "profile"));
+  return petDoc.exists() ? petDoc.data() : null;
+};
+
+// Update Pet Profile
+export const updatePetProfile = async (userId: string, updatedData: any) => {
+  await setDoc(doc(db, "users", userId, "petProfile", "profile"), updatedData, { merge: true });
+};
+
+//Delete Pet Profile (Optional)
+export const deletePetProfile = async (userId: string) => {
+  await deleteDoc(doc(db, "users", userId, "petProfile", "profile"));
+};

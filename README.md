@@ -36,7 +36,7 @@ Ensure you have the following installed before proceeding:
 - cd healthyPaws
 - npm install
 
-- ** .env file
+- **.env file** 
 NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase_auth_domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase_project_id
@@ -46,6 +46,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id
 NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=google_maps_api_key
 NEXT_PUBLIC_GOOGLE_VISION_API_KEY=google_vision_api_key
 NEXT_PUBLIC_GEMINI_API_KEY=google_gemini_ai_key
+GOOGLE_APPLICATION_CREDENTIALS=path_to_credentials_file 
 
 - npm run dev
 

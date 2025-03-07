@@ -8,6 +8,7 @@ import { LoadScript, Autocomplete } from "@react-google-maps/api";
 import { auth } from "@/lib/firebase";
 import { addBooking } from "@/lib/db";
 import './globals.css';
+import Toast from "./components/Toast";
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -19,6 +20,7 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const autocompleteRef = useRef(null);
 
@@ -84,12 +86,14 @@ export default function Home() {
 
   const bookService = async (place: any) => {
     if (!userId) {
-      alert("You must be logged in to book a service.");
+      setToastMessage("You must be logged in to book a service.");
+      // alert("You must be logged in to book a service.");
       return;
     }
 
     if (!selectedService || !selectedDate || !selectedTime) {
-      alert("Please select a service, date, and time.");
+      setToastMessage("Please select a service, date, and time.");
+      // alert("Please select a service, date, and time.");
       return;
     }
 
@@ -101,9 +105,10 @@ export default function Home() {
         time: selectedTime,
         placeName: place.name,
       });
-
-      alert(`Booking confirmed for ${place.name}!`);
+      setToastMessage(`Booking confirmed for ${place.name}!`);
+      // alert(`Booking confirmed for ${place.name}!`);
     } catch (error) {
+      setToastMessage("Booking failed. Please try again.");
       console.error("Error adding booking:", error);
     }
   };
@@ -112,11 +117,12 @@ export default function Home() {
 
   return (
     <div className="relative">
+      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
     <div className="background-wrapper">
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
     </div>
-      <div className="h-screen w-screen flex flex-col items-center justify-start relative">
+      <div className="min-h-screen flex flex-col items-center justify-start relative">
         <Navbar />
         <h1 className="mt-32 text-4xl font-semibold">Book Local Pet Services</h1>
         <p className="mt-6">From grooming to pet training services</p>
@@ -195,7 +201,7 @@ export default function Home() {
           <button onClick={fetchNearbyPlaces} className="bg-black text-white rounded-full px-6 py-2 z-5">Search</button>
         </div>
 
-        <div className="mt-4 p-4 bg-white rounded-lg shadow-lg w-3/4 max-h-[300px] overflow-y-auto">
+        <div className="mb-4 mt-4 p-4 bg-white rounded-lg shadow-lg w-3/4 max-h-[300px] overflow-y-auto">
           <h2 className="text-xl font-semibold">Nearby Pet Services</h2>
           <ul>
             {nearbyPlaces.length > 0 ? nearbyPlaces.map((place: any) => (

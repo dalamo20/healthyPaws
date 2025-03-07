@@ -5,6 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
+import { getPetProfile, updatePetProfile } from "@/lib/db";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
@@ -17,12 +18,21 @@ export default function Profile() {
   const [analyzing, setAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [petTraits, setPetTraits] = useState<string[]>([]);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser(currentUser);
-      loadPetProfile(currentUser.uid);
+      getPetProfile(currentUser.uid).then((data) => {
+        if (data) {
+          setPetName(data.petName || "");
+          setPetType(data.petType || "");
+          setPetAge(data.petAge || "");
+          setImageUrl(data.imageUrl || "");
+          setPetTraits(data.traits || []);
+        }
+      });
     } else {
       router.push("/auth/login");
     }
@@ -63,11 +73,10 @@ export default function Profile() {
       const { labels } = await response.json();
       console.log("Detected Labels:", labels);
 
-      if (labels.includes("dog")) setPetType("Dog");
-      else if (labels.includes("cat")) setPetType("Cat");
-      else if (labels.includes("rabbit")) setPetType("Rabbit");
-      else if (labels.includes("turtle")) setPetType("Turtle");
-      else setPetType("Unknown");
+      // Setting the first detected label as the pet type
+      if (labels.length > 0) {
+        setPetType(labels[0]);
+      }
 
       setAnalyzing(false);
       return labels;
@@ -92,23 +101,26 @@ export default function Profile() {
     }
 
     setPetTraits(detectedTraits);
+    const updatedTraits = detectedTraits.length > 0 ? detectedTraits : petTraits;
 
     const petProfile = {
       petName,
-      petType,
+      petType: updatedTraits.length > 0 ? updatedTraits[0] : petType,
       petAge,
       imageUrl: downloadURL || "",
-      traits: detectedTraits,
+      traits: updatedTraits,
     };
 
-    await setDoc(doc(db, "users", user.uid, "petProfile", "profile"), petProfile);
-    alert("Profile saved!");
+    await updatePetProfile(user.uid, petProfile);
+    setPetTraits(updatedTraits);
+    setEditing(false);
+    alert("Profile updated!");
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-pink-200 to-yellow-200 p-4"> 
       <Navbar />
-      <h1 className="text-2xl font-semibold mb-4">Pet Profile</h1> 
+      <h1 className="mt-24 text-2xl font-semibold mb-4">Pet Profile</h1> 
       
       {/* Image Upload */}
       <div 
@@ -134,15 +146,36 @@ export default function Profile() {
         className="hidden"
       />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6 w-80">
-        <input type="text" placeholder="Pet Name" value={petName} onChange={(e) => setPetName(e.target.value)} required className="border p-2 rounded-md" />
-        <input type="text" placeholder="Pet Type" value={petType} onChange={(e) => setPetType(e.target.value)} required className="border p-2 rounded-md" />
-        <input type="number" placeholder="Pet Age" value={petAge} onChange={(e) => setPetAge(e.target.value)} required className="border p-2 rounded-md" />
-        
-        {analyzing && <p className="text-gray-600">Analyzing image...</p>}
+      {editing ? (
+        // EDIT MODE: Show Form to Edit Profile Details
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6 w-80">
+          <label className="text-gray-700 font-semibold">Pet Name</label>
+          <input type="text" value={petName} onChange={(e) => setPetName(e.target.value)} required className="border p-2 rounded-md" />
 
-        <button type="submit" className="bg-black text-white p-2 rounded-md">Save Profile</button>
-      </form>
+          <label className="text-gray-700 font-semibold">Pet Type</label>
+          <input type="text" value={petType} onChange={(e) => setPetType(e.target.value)} required className="border p-2 rounded-md" />
+
+          <label className="text-gray-700 font-semibold">Pet Age</label>
+          <input type="number" value={petAge} onChange={(e) => setPetAge(e.target.value)} required className="border p-2 rounded-md" />
+
+          <div className="flex justify-center gap-4 mt-4">
+            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-md">Save Changes</button>
+            <button type="button" onClick={() => setEditing(false)} className="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+          </div>
+        </form>
+      ) : (
+        // VIEW MODE: Show Pet Profile Details
+        <div className="flex flex-col mt-6 bg-white p-4 rounded-lg shadow-lg w-80">
+          <p><strong>Pet Name:</strong> {petName}</p>
+          <p><strong>Pet Type:</strong> {petType ? petType.charAt(0).toUpperCase() + petType.slice(1) : ""}</p>
+          <p><strong>Pet Age:</strong> {petAge} years old</p>
+
+          <button onClick={() => setEditing(true)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">
+            Edit Profile
+          </button>
+        </div>
+      )}
+
       {/* Pet Traits Div*/}
       {petTraits.length > 0 && (
         <div className="mt-6 bg-white p-4 rounded-lg shadow-lg w-80">
